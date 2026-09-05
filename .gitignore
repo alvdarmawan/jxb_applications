@@ -1,0 +1,13 @@
+# Personal data - never commit these
+*.db
+*.csv
+job_applications.db
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Streamlit
+.streamlit/
