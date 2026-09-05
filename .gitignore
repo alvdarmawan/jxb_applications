@@ -1,7 +1,7 @@
 # Personal data - never commit these
 *.db
 *.csv
-job_applications.db
+jxb_applications.db
 
 # Python
 __pycache__/
