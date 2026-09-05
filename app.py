@@ -17,7 +17,7 @@ DB_PATH = "jxb_applications.db"
 
 STAGES = ["Applied", "Assessment", "Interview", "Offer", "Accepted", "Rejected", "Withdrawn"]
 
-st.set_page_config(page_title="Jxb Application Tracker", layout="wide")
+st.set_page_config(page_title="Alvin Needs a Jxb", layout="wide")
 
 
 def get_connection():
