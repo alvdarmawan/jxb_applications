@@ -120,7 +120,7 @@ def main():
         by="days_until_deadline", na_position="last"
     )
     filtered_display["days_until_deadline"] = filtered_display["days_until_deadline"].apply(
-        lambda x: "-" if pd.isna(x) or x < 0 else int(x)
+        lambda x: "-" if pd.isna(x) else ("Past due" if x < 0 else int(x))
     )
     st.dataframe(filtered_display, use_container_width=True, hide_index=True)
 
