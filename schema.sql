@@ -1,4 +1,4 @@
--- Job Application Tracker schema
+-- Jxb Application Tracker schema
 
 CREATE TABLE IF NOT EXISTS applications (
     id            INTEGER PRIMARY KEY AUTOINCREMENT,

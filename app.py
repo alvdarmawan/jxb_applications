@@ -1,5 +1,5 @@
 """
-Job Application Tracker - Streamlit v1
+Jxb Application Tracker - Streamlit v1
 
 Run with:
     streamlit run app.py
@@ -17,7 +17,7 @@ DB_PATH = "jxb_applications.db"
 
 STAGES = ["Applied", "Assessment", "Interview", "Offer", "Accepted", "Rejected", "Withdrawn"]
 
-st.set_page_config(page_title="Job Application Tracker", layout="wide")
+st.set_page_config(page_title="Jxb Application Tracker", layout="wide")
 
 
 def get_connection():
@@ -36,12 +36,6 @@ def load_applications(conn) -> pd.DataFrame:
     # Computed, not stored -- always current
     df["days_since_applied"] = (today - df["date_applied"]).dt.days
     df["days_until_deadline"] = (df["deadline"] - today).dt.days
-
-    active_stages = {"Applied", "Assessment", "Interview"}
-    df["stale"] = (
-        df["stage"].isin(active_stages)
-        & (df["days_since_applied"] >= 21)
-    )
 
     df["date_applied"] = df["date_applied"].dt.date
     df["deadline"] = df["deadline"].dt.date
@@ -72,7 +66,7 @@ def add_application(conn, company, role, date_applied, deadline, priority, stage
 def main():
     conn = get_connection()
 
-    st.title("Job Application Tracker")
+    st.title("Jxb Application Tracker")
 
     with st.expander("➕ Add new application"):
         with st.form("add_application_form", clear_on_submit=True):
@@ -109,16 +103,12 @@ def main():
         stage_filter = st.multiselect("Stage", STAGES, default=[])
     with fcol2:
         priority_filter = st.multiselect("Priority", [1, 2, 3], default=[])
-    with fcol3:
-        stale_only = st.checkbox("Stale only (21+ days, no movement)")
 
     filtered = df.copy()
     if stage_filter:
         filtered = filtered[filtered["stage"].isin(stage_filter)]
     if priority_filter:
         filtered = filtered[filtered["priority"].isin(priority_filter)]
-    if stale_only:
-        filtered = filtered[filtered["stale"]]
 
     st.subheader(f"Applications ({len(filtered)})")
 
@@ -129,15 +119,17 @@ def main():
     filtered_display = filtered[display_cols].sort_values(
         by="days_until_deadline", na_position="last"
     )
+    filtered_display["days_until_deadline"] = filtered_display["days_until_deadline"].apply(
+        lambda x: "-" if pd.isna(x) or x < 0 else int(x)
+    )
     st.dataframe(filtered_display, use_container_width=True, hide_index=True)
 
     st.subheader("At a glance")
-    m1, m2, m3, m4 = st.columns(4)
+    m1, m2, m3 = st.columns(3)
     m1.metric("Total applications", len(df))
     m2.metric("Active (not closed out)", int(df["stage"].isin(["Applied", "Assessment", "Interview"]).sum()))
-    m3.metric("Stale (21+ days)", int(df["stale"].sum()))
     upcoming = df[(df["days_until_deadline"].notna()) & (df["days_until_deadline"].between(0, 7))]
-    m4.metric("Deadlines in next 7 days", len(upcoming))
+    m3.metric("Deadlines in next 7 days", len(upcoming))
 
 
 if __name__ == "__main__":
