@@ -25,6 +25,7 @@ VALID_STAGES = {
 # Maps a handful of likely header spellings -> our canonical field name.
 # Add alternates here if your export uses slightly different headers.
 HEADER_ALIASES = {
+    "date": "date_applied",
     "date applied": "date_applied",
     "deadline": "deadline",
     "company": "company",
@@ -38,7 +39,7 @@ HEADER_ALIASES = {
     # "application age" is intentionally skipped -- it's computed, not stored.
 }
 
-DATE_FORMATS = ["%Y-%m-%d", "%m/%d/%Y", "%d/%m/%Y", "%m-%d-%Y", "%B %d, %Y"]
+DATE_FORMATS = ["%Y-%m-%d", "%d/%m/%Y", "%m/%d/%Y", "%d-%m-%Y", "%B %d, %Y"]
 
 
 def parse_date(value: str):
@@ -141,9 +142,9 @@ def seed_default_links(conn: sqlite3.Connection):
     if cur.fetchone()[0] > 0:
         return  # don't duplicate on re-runs
     defaults = [
-        ("LinkedIn", "https://linkedin.com/in/your-handle"),
-        ("GitHub", "https://github.com/your-handle"),
-        ("Resume (Overleaf)", "https://overleaf.com/your-project-link"),
+        ("LinkedIn", "https://linkedin.com/in/alvdarmawan"),
+        ("GitHub", "https://github.com/alvdarmawan"),
+        ("Resume (Overleaf)", "https://overleaf.com/project"),
     ]
     cur.executemany("INSERT INTO links (label, url) VALUES (?, ?)", defaults)
     conn.commit()

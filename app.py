@@ -42,6 +42,10 @@ def load_applications(conn) -> pd.DataFrame:
         df["stage"].isin(active_stages)
         & (df["days_since_applied"] >= 21)
     )
+
+    df["date_applied"] = df["date_applied"].dt.date
+    df["deadline"] = df["deadline"].dt.date
+
     return df
 
 
